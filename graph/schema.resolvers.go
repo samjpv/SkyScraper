@@ -5,24 +5,40 @@ package graph
 
 import (
 	"context"
+	"database/sql"
+	"log"
 	"test/SkyScraper/graph/generated"
 	"test/SkyScraper/graph/model"
 )
 
 func (r *queryResolver) Persons(ctx context.Context) ([]*model.Person, error) {
-	var persons []*model.Person
-	person := model.Person{
-		Firstname: "Sam",
-		Lastname:  "van der Sloot",
+	db, err := sql.Open("sqlserver", "Data Source='localhost, 1433';Initial Catalog=DEFAULT;User ID=sa;Password=[MSSQLServer!]")
+	if err != nil {
+		log.Printf("Error")
+		panic(err.Error())
 	}
-	persons = append(persons, &person)
-
-	person2 := model.Person{
-		Firstname: "Firstname",
-		Lastname:  "Lastname",
+	var (
+		firstName string
+		lastName  string
+	)
+	people, err := db.Query("SELECT * FROM People")
+	if err != nil {
+		panic(err.Error())
 	}
-	persons = append(persons, &person2)
-	return persons, nil
+	var peopleResponse []*model.Person
+	for people.Next() {
+		err := people.Scan(&firstName, &lastName)
+		if err != nil {
+			panic(err.Error())
+		}
+		person := model.Person{
+			Firstname: firstName,
+			Lastname:  lastName,
+		}
+		peopleResponse = append(peopleResponse, &person)
+	}
+	db.Close()
+	return peopleResponse, nil
 }
 
 // Query returns generated.QueryResolver implementation.
