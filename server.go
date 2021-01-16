@@ -4,38 +4,75 @@ import (
 	"database/sql"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/denisenkom/go-mssqldb"
 )
 
-const defaultPort = "8080"
+const apiPort = "8080"
+const mysqlPort = "1433"
 
 func main() {
 
-	db, err := sql.Open("mysql", "sa:[MSSQLServer!]@tcp(localhost:1433)/DEFAULT")
+	// connect to the mysql database
 
+	db, err := sql.Open("sqlserver", "Data Source='localhost, 1433';Initial Catalog=DEFAULT;User ID=sa;Password=[MSSQLServer!]")
+	defer db.Close()
 	if err != nil {
 		log.Printf("Error")
 		panic(err.Error())
 	}
+	if err = db.Ping(); err != nil {
+		log.Printf("Connection successfully pinged")
+	}
 	log.Printf("DB opened without error!")
-	defer db.Close()
 
-	// perform a db.Query insert
+	ins, err := db.Query("INSERT INTO People VALUES ('hello', 'there')")
+	defer ins.Close()
+	if err != nil {
+		log.Printf("Error")
+		panic(err.Error())
+	}
+	log.Printf("Successful query")
+
 	log.Printf("Moving on")
-	insert, err := db.Query("INSERT INTO dbo.Persons VALUES ('firstname', 'lastname')")
-	log.Printf("Query completed")
-
-	// if there is an error inserting, handle it
+	people, err := db.Query("SELECT * FROM People")
+	defer people.Close()
 	if err != nil {
 		panic(err.Error())
 	}
-	// be careful deferring Queries if you are using transactions
-	defer insert.Close()
+	log.Printf("Query completed without error!")
+
+	var (
+		firstName  string
+		secondName string
+	)
+	for people.Next() {
+		err := people.Scan(&firstName, &secondName)
+		if err != nil {
+			panic(err.Error())
+		}
+		log.Printf("FirstName: %s", firstName)
+		log.Printf("SecondName: %s", secondName)
+	}
+
+	// var (
+	// 	sqlversion string
+	// )
+	// rows, err := db.Query("select @@version")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// for rows.Next() {
+	// 	err := rows.Scan(&sqlversion)
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	log.Println(sqlversion)
+	// }
 
 	// original code
 	// port := os.Getenv("PORT")
 	// if port == "" {
-	// 	port = defaultPort
+	// 	port = apiPort
 	// }
 
 	// srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
