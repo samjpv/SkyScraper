@@ -5,18 +5,14 @@ package graph
 
 import (
 	"context"
-	"database/sql"
-	"log"
 	"test/SkyScraper/graph/generated"
 	"test/SkyScraper/graph/model"
+	"test/SkyScraper/util/dbClient"
 )
 
 func (r *queryResolver) Persons(ctx context.Context) ([]*model.Person, error) {
-	db, err := sql.Open("sqlserver", "Data Source='localhost, 1433';Initial Catalog=DEFAULT;User ID=sa;Password=[MSSQLServer!]")
-	if err != nil {
-		log.Printf("Error")
-		panic(err.Error())
-	}
+
+	var db = dbClient.OpenDb()
 	var (
 		firstName string
 		lastName  string
@@ -46,10 +42,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
 
+type mutationResolver struct{ *Resolver }
+
 // !!! WARNING !!!
 // The code below was going to be deleted when updating resolvers. It has been copied here so you have
 // one last chance to move it out of harms way if you want. There are two reasons this happens:
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
-type mutationResolver struct{ *Resolver }
