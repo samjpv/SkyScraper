@@ -5,13 +5,14 @@ package graph
 
 import (
 	"context"
-	"test/SkyScraper/graph/generated"
+	"test/SkyScraper/dbClient"
 	"test/SkyScraper/graph/model"
-	"test/SkyScraper/util/dbClient"
+
+	generated1 "github.com/samjpv/SkyScraper/graph/generated"
+	model1 "github.com/samjpv/SkyScraper/graph/model"
 )
 
-func (r *queryResolver) Persons(ctx context.Context) ([]*model.Person, error) {
-
+func (r *queryResolver) Persons(ctx context.Context) ([]*model1.Person, error) {
 	var db = dbClient.OpenDb()
 	var (
 		firstName string
@@ -37,12 +38,10 @@ func (r *queryResolver) Persons(ctx context.Context) ([]*model.Person, error) {
 	return peopleResponse, nil
 }
 
-// Query returns generated.QueryResolver implementation.
-func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
+// Query returns generated1.QueryResolver implementation.
+func (r *Resolver) Query() generated1.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
-
-type mutationResolver struct{ *Resolver }
 
 // !!! WARNING !!!
 // The code below was going to be deleted when updating resolvers. It has been copied here so you have
@@ -50,3 +49,4 @@ type mutationResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+type mutationResolver struct{ *Resolver }

@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"sync"
 	"sync/atomic"
-	"test/SkyScraper/graph/model"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
+	"github.com/samjpv/SkyScraper/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -312,7 +312,7 @@ func (ec *executionContext) _Query_persons(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*model.Person)
 	fc.Result = res
-	return ec.marshalNPerson2ᚕᚖtestᚋSkyScraperᚋgraphᚋmodelᚐPersonᚄ(ctx, field.Selections, res)
+	return ec.marshalNPerson2ᚕᚖgithubᚗcomᚋsamjpvᚋSkyScraperᚋgraphᚋmodelᚐPersonᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1817,7 +1817,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNPerson2ᚕᚖtestᚋSkyScraperᚋgraphᚋmodelᚐPersonᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Person) graphql.Marshaler {
+func (ec *executionContext) marshalNPerson2ᚕᚖgithubᚗcomᚋsamjpvᚋSkyScraperᚋgraphᚋmodelᚐPersonᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Person) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -1841,7 +1841,7 @@ func (ec *executionContext) marshalNPerson2ᚕᚖtestᚋSkyScraperᚋgraphᚋmod
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPerson2ᚖtestᚋSkyScraperᚋgraphᚋmodelᚐPerson(ctx, sel, v[i])
+			ret[i] = ec.marshalNPerson2ᚖgithubᚗcomᚋsamjpvᚋSkyScraperᚋgraphᚋmodelᚐPerson(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -1854,7 +1854,7 @@ func (ec *executionContext) marshalNPerson2ᚕᚖtestᚋSkyScraperᚋgraphᚋmod
 	return ret
 }
 
-func (ec *executionContext) marshalNPerson2ᚖtestᚋSkyScraperᚋgraphᚋmodelᚐPerson(ctx context.Context, sel ast.SelectionSet, v *model.Person) graphql.Marshaler {
+func (ec *executionContext) marshalNPerson2ᚖgithubᚗcomᚋsamjpvᚋSkyScraperᚋgraphᚋmodelᚐPerson(ctx context.Context, sel ast.SelectionSet, v *model.Person) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
